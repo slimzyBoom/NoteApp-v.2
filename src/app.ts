@@ -12,6 +12,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send("The server is active")
+})
 app.use("/api", noteRoutes);
 app.use(errorHandler);
 
