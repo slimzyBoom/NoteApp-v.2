@@ -4,11 +4,13 @@ import dotenv from "dotenv";
 import connectDB from "./config/db";
 import noteRoutes from "./routes/noteRoutes";
 import { errorHandler } from "./middleware/errorHandler";
+import { requestLogger } from "./middleware/logger";
 
 dotenv.config();
 connectDB();
 
 const app = express();
+app.use(requestLogger)
 app.use(cors());
 app.use(express.json());
 

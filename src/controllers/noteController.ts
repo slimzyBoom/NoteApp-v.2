@@ -1,5 +1,7 @@
 import { RequestHandler } from "express";
-import Note from "../models/Note";
+import Note, { INote } from "../models/Note";
+import Category from "../models/Category";
+import mongoose from "mongoose";
 
 export const getNotes:RequestHandler = async (req, res) => {
   try {
@@ -23,6 +25,30 @@ export const getNoteById: RequestHandler = async (req, res) => {
   }
 };
 
+export const getNoteByCategory:RequestHandler = async (req, res) => {
+  try {
+    const categoryId = req.params.categoryId;
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+      res.status(400).json({ message: "Invalid category ID" });
+      return
+    }
+    const notes = await Note.find({category: categoryId})
+
+    if(notes.length === 0){
+      res.status(404).json({
+        message: "No notes found in this category"
+      })
+      return
+    }
+
+    res.json(notes)
+  } catch (error) {
+    res.status(500).json({
+      message: "Error fetching notes by category"
+    })
+  }
+}
+
 export const createNote:RequestHandler = async (req, res) => {
   try {
     const { title, content } = req.body;
@@ -36,6 +62,66 @@ export const createNote:RequestHandler = async (req, res) => {
     res.status(201).json(newNote);
   } catch (error) {
     res.status(500).json({ message: "Error creating note" });
+  }
+};
+
+export const updateNote: RequestHandler = async (req, res) => {
+  try {
+    const { title, content, categoryId } = req.body;
+
+    // Validate required fields
+    if (!title || !content || !categoryId) {
+      res.status(400).json({
+        message: "Title, content, and category ID are required",
+      });
+      return;
+    }
+
+    // Validate Note ID
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      res.status(400).json({ message: "Invalid note ID" });
+      return;
+    }
+
+    // Validate Category ID
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+      res.status(400).json({ message: "Invalid category ID" });
+      return;
+    }
+
+    // Check if category exists
+    const category = await Category.findById(categoryId);
+    if (!category) {
+      res.status(404).json({
+        message: "Category not found",
+      });
+      return;
+    }
+
+    // Update Note
+    const updatedNote = await Note.findByIdAndUpdate(
+      req.params.id,
+      {
+        title,
+        content,
+        category: category._id, // Store ObjectId, not an object
+      },
+      { new: true } // Return updated document
+    );
+
+    // Check if note exists
+    if (!updatedNote) {
+      res.status(404).json({
+        message: "Note not found",
+      });
+      return;
+    }
+
+    res.json(updatedNote);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error updating note",
+    });
   }
 };
 
