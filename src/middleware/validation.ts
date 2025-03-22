@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
-import mongoose, { StringExpressionOperatorReturningArray } from "mongoose";
+import mongoose from "mongoose";
 
 type Validator<T> = (data: T) => { valid: boolean, message?: string }
 

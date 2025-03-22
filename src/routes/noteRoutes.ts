@@ -1,14 +1,18 @@
 import express from "express";
-import { getNotes, getNoteById, createNote, deleteNote, updateNote, getNoteByCategory } from "../controllers/noteController";
+import { getNotes, getNoteById, createNote, deleteNote, updateNote, getNoteByCategory, createCategory, getAllCategories } from "../controllers/noteController";
 import { validateRequest, validateNote } from "../middleware/validation";
 
 const router = express.Router();
 
-router.get("/notes", getNotes)
-router.get("/notes/:id", getNoteById);
-router.get("notes/category/:categoryId", getNoteByCategory)
-router.post("/notes", validateRequest(validateNote), createNote)
-router.put("/notes", validateRequest(validateNote), updateNote)
-router.delete("notes/:id", deleteNote)
+router.get("/category", getAllCategories);
+router.get("/category/:categoryId", getNoteByCategory);
+router.get("/:id", getNoteById);
+router.get("/", getNotes);
+
+router.post("/category", createCategory);
+router.post("/", createNote);
+router.put("/", validateRequest(validateNote), updateNote);
+router.delete("/:id", deleteNote);
+
 
 export default router;

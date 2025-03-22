@@ -1,11 +1,10 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document, Types } from "mongoose";
 
 export interface INote extends Document {
   title: string;
   content: string;
-  category: mongoose.Schema.Types.ObjectId;
-  createdAt: Date;
-  updatedAt: Date;
+  category: Types.ObjectId;
+  user: Types.ObjectId
 }
 
 const NoteSchema = new Schema<INote>(
@@ -21,6 +20,11 @@ const NoteSchema = new Schema<INote>(
     category: {
       type: Schema.Types.ObjectId,
       ref: "Category",
+      required: true
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true
     }
   },
