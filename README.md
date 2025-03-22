@@ -1,16 +1,17 @@
-### 📒 Note-Taking API with TypeScript, Express, and MongoDB  
+### 📚 Note-Taking API with TypeScript, Express, and MongoDB  
 
 #### **Overview**  
-This is a simple Note-Taking API built with **Node.js, Express, TypeScript, and MongoDB**. The API allows users to **create, update, delete, and fetch notes**, each categorized under a specific category.  
+This is a simple Note-Taking API built with **Node.js, Express, TypeScript, and MongoDB**. The API allows users to **create, update, delete, and fetch notes**, each categorized under a specific category. Notes without a specified category are automatically assigned to a default "General" category.
 
 ---
 
 ## ✨ Features  
 ✅ **CRUD Operations for Notes** 📝  
 ✅ **Category Support** for organizing notes 📂  
+✅ **Automatic Category Assignment** when a category is not specified ✅  
 ✅ **Validation Middleware** using TypeScript Generics ✅  
 ✅ **Logging Middleware** to track API requests 📊  
-✅ **MongoDB Integration** for data persistence 💾  
+✅ **MongoDB Integration** for data persistence 📋  
 
 ---
 
@@ -32,6 +33,7 @@ Create a `.env` file in the project root and add:
 ```
 MONGO_URI=mongodb://localhost:27017/noteDB
 PORT=5000
+JWT_SECRET=your_jwt_secret
 ```
 
 ### **4️⃣ Start the Server**  
@@ -48,12 +50,12 @@ The API will be available at:
 ### **📌 Notes API**  
 | Method | Endpoint                  | Description                 |
 |--------|---------------------------|-----------------------------|
-| `POST` | `/api/notes`               | Create a new note           |
+| `POST` | `/api/notes`               | Create a new note (default category: "General" if none provided) |
 | `GET`  | `/api/notes`               | Get all notes               |
 | `GET`  | `/api/notes/:id`           | Get a single note by ID     |
 | `PUT`  | `/api/notes/:id`           | Update a note               |
 | `DELETE` | `/api/notes/:id`         | Delete a note               |
-| `GET`  | `/api/notes/categories/:categoryId` | Get notes by category |
+| `GET`  | `/api/notes/category/:categoryId` | Get notes by category |
 
 ### **📌 Categories API**  
 | Method | Endpoint                  | Description                     |
@@ -65,7 +67,7 @@ The API will be available at:
 
 ---
 
-## 📥 Example Requests  
+## 👆 Example Requests  
 
 ### **1️⃣ Create a Category**  
 ```http
@@ -97,8 +99,7 @@ Content-Type: application/json
 ```json
 {
   "title": "Meeting Notes",
-  "content": "Discuss project updates",
-  "categoryId": "60f8c9b0e9f3f90c3c4a5e3d"
+  "content": "Discuss project updates"
 }
 ```
 #### **Response**  
@@ -108,8 +109,8 @@ Content-Type: application/json
   "title": "Meeting Notes",
   "content": "Discuss project updates",
   "category": {
-    "id": "60f8c9b0e9f3f90c3c4a5e3d",
-    "name": "Work"
+    "id": "default-category-id",
+    "name": "General"
   },
   "createdAt": "2025-03-10T12:34:56.789Z"
 }
@@ -119,7 +120,7 @@ Content-Type: application/json
 
 ### **3️⃣ Get Notes by Category**  
 ```http
-GET http://localhost:5000/api/notes/categories/60f8c9b0e9f3f90c3c4a5e3d
+GET http://localhost:5000/api/notes/category/60f8c9b0e9f3f90c3c4a5e3d
 ```
 #### **Response**  
 ```json
@@ -134,34 +135,6 @@ GET http://localhost:5000/api/notes/categories/60f8c9b0e9f3f90c3c4a5e3d
     }
   }
 ]
-```
-
----
-
-### **4️⃣ Update a Note**  
-```http
-PUT http://localhost:5000/api/notes/60f8c9b0e9f3f90c3c4a5e3e
-Content-Type: application/json
-```
-#### **Request Body**  
-```json
-{
-  "title": "Updated Meeting Notes",
-  "content": "Added discussion points",
-  "categoryId": "60f8c9b0e9f3f90c3c4a5e3d"
-}
-```
-#### **Response**  
-```json
-{
-  "id": "60f8c9b0e9f3f90c3c4a5e3e",
-  "title": "Updated Meeting Notes",
-  "content": "Added discussion points",
-  "category": {
-    "id": "60f8c9b0e9f3f90c3c4a5e3d",
-    "name": "Work"
-  }
-}
 ```
 
 ---
@@ -195,11 +168,5 @@ note-taking-api/
 | **TypeScript** | Type safety |
 | **MongoDB** | NoSQL database |
 | **Mongoose** | ODM for MongoDB |
+| **JWT & bcrypt** | Authentication & security |
 | **Cors & dotenv** | Security & config management |
-
----
-
-## 🎯 Next Steps  
-- ✅ Add authentication (JWT)
-- ✅ Implement user roles (admin/user)
-- ✅ Add search & filtering for notes
