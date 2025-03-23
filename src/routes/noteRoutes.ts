@@ -11,7 +11,7 @@ router.get("/", getNotes);
 
 router.post("/category", createCategory);
 router.post("/", createNote);
-router.put("/", validateRequest(validateNote), updateNote);
+router.put("/:id", validateRequest(validateNote), updateNote);
 router.delete("/:id", deleteNote);
 
 
