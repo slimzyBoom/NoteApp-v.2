@@ -172,8 +172,8 @@ export const updateNote: RequestHandler = async (
   try {
     const { title, content, categoryId } = req.body;
 
-    // Validate required fields
-    if (!title || !content || !categoryId) {
+    // Validate if all field is missing
+    if (!title && !content && !categoryId) {
       res
         .status(400)
         .json({ message: "Title, content, and category ID are required" });
