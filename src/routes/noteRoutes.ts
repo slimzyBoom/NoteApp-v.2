@@ -10,8 +10,8 @@ router.get("/:id", getNoteById);
 router.get("/", getNotes);
 
 router.post("/category", createCategory);
-router.post("/", createNote);
-router.put("/:id", validateRequest(validateNote), updateNote);
+router.post("/", validateRequest(validateNote), createNote);
+router.put("/:id", updateNote);
 router.delete("/:id", deleteNote);
 
 
