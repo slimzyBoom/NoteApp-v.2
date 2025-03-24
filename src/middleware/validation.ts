@@ -14,8 +14,8 @@ export const validateRequest = <T>(validator: Validator<T>) :RequestHandler => (
 
 // Validation Logic
 export const validateNote = (data: { title: string; content: string; categoryId: string}) => {
-  if(!data.title || !data.content || !data.categoryId ){
-    return { valid: false, message: "Title, content and categoryId are required "}
+  if(!data.title || !data.content ){
+    return { valid: false, message: "Title and content are required "}
   }
 
    // Validate if categoryId is a valid ObjectId

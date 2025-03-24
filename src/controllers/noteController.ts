@@ -129,10 +129,6 @@ export const createNote: RequestHandler = async (
 ) => {
   try {
     const { title, content, category } = req.body;
-    if (!title || !content) {
-      res.status(400).json({ message: "Title and content are required" });
-      return;
-    }
 
     if (!req.user) {
       res.status(401).json({ message: "Unauthorized" });
@@ -165,6 +161,7 @@ export const createNote: RequestHandler = async (
   }
 };
 
+// The categroy ID and the note ID are required in the update note controller 
 export const updateNote: RequestHandler = async (
   req: AuthInterface,
   res: Response
@@ -173,10 +170,10 @@ export const updateNote: RequestHandler = async (
     const { title, content, categoryId } = req.body;
 
     // Validate required fields
-    if (!title || !content || !categoryId) {
+    if ( title && content && categoryId) {
       res
         .status(400)
-        .json({ message: "Title, content, and category ID are required" });
+        .json({ message: "Title or content or category ID are required" });
       return;
     }
 
@@ -214,10 +211,11 @@ export const updateNote: RequestHandler = async (
       return;
     }
 
-    // Update Note
-    note.title = title;
-    note.content = content;
-    note.category = categoryId;
+        // Update Note
+    if (title) note.title = title;
+    if (content) note.content = content;
+    if (categoryId) note.category = categoryId;
+    
     await note.save();
 
     res.json(note);
