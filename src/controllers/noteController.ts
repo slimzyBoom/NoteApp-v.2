@@ -176,7 +176,7 @@ export const updateNote: RequestHandler = async (
     if (!title && !content && !categoryId) {
       res
         .status(400)
-        .json({ message: "Title, content, and category ID are required" });
+        .json({ message: "Title or content or category ID are required" });
       return;
     }
 
@@ -193,7 +193,7 @@ export const updateNote: RequestHandler = async (
 
     // Validate Category ID
     if (!mongoose.Types.ObjectId.isValid(categoryId)) {
-      res.status(400).json({ message: "Invalid category ID" });
+      res.status(400).json({ message: "Invalid required category ID " });
       return;
     }
 
@@ -215,9 +215,9 @@ export const updateNote: RequestHandler = async (
     }
 
     // Update Note
-    note.title = title;
-    note.content = content;
-    note.category = categoryId;
+    if(title) note.title = title;
+    if(content) note.content = content;
+    if(categoryId) note.category = categoryId
     await note.save();
 
     res.json(note);
